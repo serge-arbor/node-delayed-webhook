@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+    e2e:
+        init: true
+        restart: "no"
+        image: node:16
+        command: ["npm", "run", "_e2e"]
+        volumes:
+            - ${PWD}:${PWD}
+        working_dir: ${PWD}
+        environment:
+            TIMERS_TEST_SERVER_HOST: e2e
+            TIMERS_API_ENDPOINT: http://api:10080
+
+volumes:
+    redis-data:
