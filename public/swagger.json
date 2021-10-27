@@ -1,0 +1,130 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Delayed Webhook Api Documentation",
+    "version": "1.0.0",
+    "title": "Delayed Webhook API"
+  },
+  "schemes": ["http"],
+  "host": "localhost:3000",
+  "basePath": "/",
+  "paths" : {
+    "/timers": {
+      "post": {
+        "summary": "Create timer",
+        "description": "Created timer will be stored to Redis and after required time the webhook will shoot the timer url",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Timer request parameters",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/CreateTimerRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Timer created",
+            "schema": {
+              "$ref": "#/definitions/CreateTimerResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid timer spec",
+            "schema": {
+              "$ref": "#/definitions/InvalidResponse"
+            }
+          }
+        }
+      }
+    },
+    "/timers/{id}": {
+      "get": {
+        "summary": "Get the timer",
+        "description": "Get the timer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "timer id",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Timer found",
+            "schema": {
+              "$ref": "#/definitions/GetTimerResponse"
+            }
+          },
+          "404": {
+            "description": "Timer not found",
+            "schema": {
+              "$ref": "#/definitions/InvalidResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CreateTimerRequest": {
+      "type": "object",
+      "required": ["url"],
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "seconds": {
+          "type": "integer"
+        },
+        "minutes": {
+          "type": "integer"
+        },
+        "hours": {
+          "type": "integer"
+        }
+      }
+    },
+    "CreateTimerResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "GetTimerResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "time_left": {
+          "type": "number"
+        }
+      }
+    },
+    "InvalidResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

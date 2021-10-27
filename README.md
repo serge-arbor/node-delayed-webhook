@@ -9,6 +9,7 @@ Project Delayed Webhook is util that provides API for scheduling and shooting a 
 * [Technologies Used](#technologies-used)
 * [Features](#features)
 * [Development](#development)
+* [API documentation](#api-documentation)
 * [Room for Improvement](#room-for-improvement)
 * [Contact](#contact)
 
@@ -70,17 +71,31 @@ npm run e2e
 npm run local
 ```
 
-**By default, API is running at http://localhost:10080**
+To run API and worker services out of the docker containers you can start Redis separately, for example, running a docker container:
+```console
+docker run -p 6379:6379 redis:6
+```
 
+**By default, API is running at http://localhost:3000**
+
+## API documentation
 There are two end-points:
 - `POST /timers`
 - `GET /timers/:id`
 
+* When the app is running, API documentation is accessible here: http://localhost/api/doc
+* If you use some kind of proxy, set your host in `/public/swagger.json` file
+
+![drawing](https://i.vgy.me/WaD5Bo.png)
+
 
 ## Room for Improvement
 - **The bottleneck of this design is ID auto-increment counter** - Redis' INCR. Because there is a point of synchronization between all the http-api workers. If it's acceptable to replace continuous IDs with **UUIDs or other randomized IDs**, it'll allow scaling the number of http-api instances drastically
-- There could be Unit Tests
+- Code Structure should be more accurate
+- e2e test should not be hardcode
+- 100% Unit Tests Coverage
 - Redis could be clustered
+- Swagger Documentation should be auto-generated
 
 ## Contact
 Created by [@serge-arbor](https://www.linkedin.com/in/serge-arbor) - feel free to contact me!
