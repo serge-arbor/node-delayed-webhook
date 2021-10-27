@@ -11,7 +11,7 @@ const defaultTestServerPort = 18080;
 const envPort = parseInt(process.env.TIMERS_TEST_SERVER_PORT, 10);
 const testServerPort = isNaN(envPort) ? defaultTestServerPort : envPort;
 
-const defaultHttpApiEndpoint = "http://localhost:10080";
+const defaultHttpApiEndpoint = "http://localhost:3000";
 const httpApiEndpoint = process.env.TIMERS_API_ENDPOINT ?? defaultHttpApiEndpoint;
 
 async function checkHttpApiResponse(endpoint: string): Promise<boolean> {

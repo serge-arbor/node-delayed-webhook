@@ -83,7 +83,7 @@ There are two end-points:
 - `POST /timers`
 - `GET /timers/:id`
 
-* When the app is running, API documentation is accessible here: http://localhost/api/doc
+* When the app is running, API documentation is accessible here: http://localhost:3000/api/doc
 * If you use some kind of proxy, set your host in `/public/swagger.json` file
 
 ![drawing](https://i.vgy.me/WaD5Bo.png)

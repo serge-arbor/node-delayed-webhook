@@ -11,7 +11,7 @@ services:
         working_dir: ${PWD}
         environment:
             TIMERS_TEST_SERVER_HOST: e2e
-            TIMERS_API_ENDPOINT: http://api:10080
+            TIMERS_API_ENDPOINT: http://api:3000
 
 volumes:
     redis-data:
