@@ -12,7 +12,7 @@ async function process(job: Job<TimerRecord>, done: Queue.DoneCallback<void>): P
     const timer = job.data;
     log(`Processing job ${job.id} with timer %o`, timer);
     // TODO: fail the job if response code isn't 200
-    await got(timer.url).then(() => done(null), done);
+    await got(timer.url + '/' + timer.id).then(() => done(null), done);
 }
 
 export function startWorker(redisUrl: string) {
