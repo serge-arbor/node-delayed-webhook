@@ -1,6 +1,5 @@
 import { app } from "./app";
-
-const defaultPort = 10080;
+const defaultPort = 3000;
 
 async function main(): Promise<void> {
     const port = process.env.PORT ?? defaultPort;
