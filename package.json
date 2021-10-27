@@ -11,7 +11,7 @@
     "local": "docker-compose -f docker-compose.yaml up --build",
     "build": "tsc --build",
     "test": "jest",
-    "_e2e": "jest -c jest.config.e2e.js",
+    "_e2e": "jest -c jest.config.e2e.js --runInBand",
     "e2e": "docker-compose -f docker-compose.yaml -f docker-compose-e2e-tests.yaml up --build --abort-on-container-exit"
   },
   "author": "Serge Arbor",

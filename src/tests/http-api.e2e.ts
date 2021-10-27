@@ -41,7 +41,7 @@ describe("Timers Service", function () {
         });
 
         testServer = http.createServer(function (req, res) {
-            const match = /\/test\/([\d\w\-]*)(\?|$)/.exec(req.url);
+            const match = /\/test\/([\d\w\-]*)\/(\d+)/.exec(req.url);
             if (match.length < 2) {
                 res.statusCode = 404;
             } else {
