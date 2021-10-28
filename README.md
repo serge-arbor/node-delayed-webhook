@@ -17,7 +17,7 @@ Project Delayed Webhook is util that provides API for scheduling and shooting a 
 ## Overview
 - Built with **Node.js, Express, and TypeScript**. It's not my primary tech stack, so I invested an entire week to learn it. I love it!
 - This implementation is made like a real-world short-deadline optimal solution without any over-complication and unnecessary things
-- ***You can check out my [alternative solution to this Home Assignment](https://github.com/serge-arbor/php-webhook-api) built with Symfony, which demonstrate API best practices, scalable code structure, auto-documentation with SwaggerUI***
+- ***You can check out my [alternative solution to this Home Assignment](https://github.com/serge-arbor/php-delayed-webhook) built with Symfony, which demonstrate API best practices, scalable code structure, auto-documentation with SwaggerUI***
 
 ## Assumptions and Design decisions
 - The application is required to be used in some local environment without any external access, therefore **the authentication is not required**
