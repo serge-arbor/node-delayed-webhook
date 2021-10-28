@@ -6,7 +6,6 @@
     "title": "Delayed Webhook API"
   },
   "schemes": ["http"],
-  "host": "localhost:3000",
   "basePath": "/",
   "paths" : {
     "/timers": {
