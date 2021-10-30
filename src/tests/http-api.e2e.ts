@@ -54,9 +54,7 @@ describe("Timers Service", function () {
         testServer.unref();
     });
 
-    beforeEach(async function () {
-        requestsReceived = [];
-    });
+    beforeEach(async function () {});
 
     describe("POST /timers", () => {
         it("should return the status code 201 if a correct timer specification is passed", async () => {
@@ -65,7 +63,7 @@ describe("Timers Service", function () {
             const timer: TimerPayload = { url, seconds: 1 };
             const res = await got.post(makeApiUrl(), { json: timer });
             expect(res.statusCode).toEqual(201);
-            await pWaitFor(() => requestsReceived.length > 0, { interval: 10, timeout: 30 * 1000 });
+            await pWaitFor(() => requestsReceived.includes(testId), { interval: 10, timeout: 30 * 1000 });
             expect(requestsReceived).toContain(testId);
         });
 
