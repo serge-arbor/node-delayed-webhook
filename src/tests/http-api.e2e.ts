@@ -2,14 +2,7 @@ import * as crypto from "crypto";
 import got from "got";
 import pWaitFor from "p-wait-for";
 import type { TimerPayload } from "../lib/timer";
-import { promisify } from "util";
-import * as http from "http";
-
-const defaultTestServerHost = "localhost";
-const testServerHost = process.env.TIMERS_TEST_SERVER_HOST ?? defaultTestServerHost;
-const defaultTestServerPort = 18080;
-const envPort = parseInt(process.env.TIMERS_TEST_SERVER_PORT, 10);
-const testServerPort = isNaN(envPort) ? defaultTestServerPort : envPort;
+import testServer from "./utils/test-server";
 
 const defaultHttpApiEndpoint = "http://localhost:3000";
 const httpApiEndpoint = process.env.TIMERS_API_ENDPOINT ?? defaultHttpApiEndpoint;
@@ -22,49 +15,33 @@ async function checkHttpApiResponse(endpoint: string): Promise<boolean> {
     return response?.statusCode === 200;
 }
 
-function makeTestUrl(testId: string): string {
-    return `http://${testServerHost}:${testServerPort}/test/${testId}`;
-}
-
 function makeApiUrl(timerId?: string): string {
     return httpApiEndpoint + "/timers/" + (timerId ?? "");
 }
 
 describe("Timers Service", function () {
-    let testServer: null | http.Server = null;
-    let requestsReceived: Array<string> = [];
+    const webhookServer = new testServer(httpApiEndpoint);
 
     beforeAll(async function () {
         await pWaitFor(async (): Promise<boolean> => checkHttpApiResponse(httpApiEndpoint), {
             interval: 100,
             timeout: 30 * 1000,
         });
-
-        testServer = http.createServer(function (req, res) {
-            const match = /\/test\/([\d\w\-]*)\/(\d+)/.exec(req.url);
-            if (match.length < 2) {
-                res.statusCode = 404;
-            } else {
-                requestsReceived.push(match[1]);
-            }
-            res.end();
-        });
-        const listen = promisify(testServer.listen.bind(testServer));
-        await listen(testServerPort, testServerHost);
-        testServer.unref();
+        await webhookServer.createServer();
     });
-
-    beforeEach(async function () {});
 
     describe("POST /timers", () => {
         it("should return the status code 201 if a correct timer specification is passed", async () => {
             const testId = crypto.randomUUID();
-            const url = makeTestUrl(testId);
+            const url = webhookServer.makeWebhookUrl(testId);
             const timer: TimerPayload = { url, seconds: 1 };
+
             const res = await got.post(makeApiUrl(), { json: timer });
             expect(res.statusCode).toEqual(201);
-            await pWaitFor(() => requestsReceived.includes(testId), { interval: 10, timeout: 30 * 1000 });
-            expect(requestsReceived).toContain(testId);
+
+            // Waiting for worker to shoot webhook
+            await pWaitFor(() => webhookServer.isWebhookFired(testId), { interval: 10, timeout: 30 * 1000 });
+            expect(webhookServer.isWebhookFired(testId)).toEqual(true);
         });
 
         it("should return the status code 400 if an incorrect timer specification is passed", async () => {
@@ -77,7 +54,7 @@ describe("Timers Service", function () {
     describe("GET /timers/:id", () => {
         it("should return time left to the deadline", async () => {
             const testId = crypto.randomUUID();
-            const url = makeTestUrl(testId);
+            const url = webhookServer.makeWebhookUrl(testId);
             const timerTimeoutSec = 600;
             const timer: TimerPayload = { url, seconds: timerTimeoutSec };
 
@@ -95,7 +72,7 @@ describe("Timers Service", function () {
         });
 
         it("should return the status code 404 if a timer with a requested ID does not exist", async () => {
-            const res = await got(makeApiUrl("56774747"), { throwHttpErrors: false });
+            const res = await got(makeApiUrl("0"), { throwHttpErrors: false });
             expect(res.statusCode).toEqual(404);
         });
     });
