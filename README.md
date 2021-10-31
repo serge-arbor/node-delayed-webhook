@@ -16,7 +16,8 @@ Project Delayed Webhook is util that provides API for scheduling and shooting a 
 
 ## Overview
 - Built with **Node.js, Express, and TypeScript**. It's not my primary tech stack, so I invested an entire week to learn it. I love it!
-- This implementation is made like a real-world short-deadline optimal solution without any over-complication and unnecessary things
+- This implementation is a short-deadline hardcode without following SOLID principles. I can make it much better if I learn TypeScript 1-2 weeks more
+- The goal is to show fast-learning skills and to try implement same idea which I've implemented with PHP for this Home Assignment
 - ***You can check out my [alternative solution to this Home Assignment](https://github.com/serge-arbor/php-delayed-webhook) built with Symfony, which demonstrate API best practices, scalable code structure, auto-documentation with SwaggerUI***
 
 ## Assumptions and Design decisions
@@ -90,8 +91,9 @@ There are two end-points:
 
 ## Room for Improvement
 - **The bottleneck of this design is ID auto-increment counter** - Redis' INCR. Because there is a point of synchronization between all the http-api workers. If it's acceptable to replace continuous IDs with **UUIDs or other randomized IDs**, it'll allow scaling the number of http-api instances drastically
-- Code Structure should be more accurate
-- e2e test should not be hardcode
+- Code structure should be more accurate
+- Following SOLID principles
+- Using the best API practices with TypeScript
 - 100% Unit Tests Coverage
 - Redis could be clustered
 - Swagger Documentation should be auto-generated
